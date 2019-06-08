@@ -1,0 +1,3 @@
+#Queremos ignorar todos os arquivos compilados de java, ou seja, os arquivos .class
+
+*.class
