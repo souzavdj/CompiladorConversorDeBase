@@ -1,0 +1,198 @@
+/*
+  clear && rm -f *.java *.class && javacc calculator.jj && clear && javac *.java && cat file.gamma | java Calculator
+*/
+
+options {
+  STATIC = false;
+}
+
+PARSER_BEGIN(Calculator)
+
+public class Calculator {
+
+    final static String Version = "0.0.1";
+
+    public static void main(String args[]) throws ParseException, TokenMgrError {
+        Calculator interpreter = new Calculator(System.in);
+        interpreter.Start();
+    }
+}
+
+PARSER_END(Calculator)
+
+SKIP: { " " | "\t" | "\r" }
+
+SKIP: {
+    "/*": multilinecomment
+}
+
+<multilinecomment> SKIP: {
+    "*/": DEFAULT | <~[]>
+}
+
+TOKEN: {
+  <NUMBER:   <DIGITS>
+           | <DIGITS> "." <DIGITS>
+           | <DIGITS> "."
+           | "." <DIGITS> >
+}
+
+TOKEN: {
+    < DIGITS: (["0" - "9"])+ >
+}
+
+TOKEN: {
+    < EOL: "\n" | "\r" | "\r\n"  >
+}
+
+TOKEN: {
+    < PLUS: "+" >
+}
+
+TOKEN: {
+    < MINUS: "-" >
+}
+
+TOKEN: {
+    < DIVIDE: "/" >
+}
+
+TOKEN: {
+    < TIMES: "*" >
+}
+
+TOKEN: {
+    < OPEN_PAR: "(" >
+}
+
+TOKEN: {
+    < CLOSE_PAR: ")" >
+}
+
+TOKEN: {
+    < PREVIOUS: "$" >
+}
+
+TOKEN: {
+    < EXP: "^" >
+}
+
+TOKEN: {
+    < FATORIAL: <DIGITS> "!" >
+}
+
+void Start() throws NumberFormatException :
+{
+    double previousValue;
+}
+{
+    (
+        previousValue = Expression()
+        <EOL>
+        { System.out.println(previousValue); }
+    )*
+
+    <EOF>
+}
+
+double Primary() throws NumberFormatException :
+{
+    Token t;
+    Double d;
+}
+{
+    (
+        t = <NUMBER>
+        {
+            return Double.parseDouble(t.image);
+        }
+
+        |
+
+        /* <PREVIOUS>
+        { return previousValue; }
+
+        | */
+
+        <OPEN_PAR> d = Expression() <CLOSE_PAR>
+        { return d; }
+
+        |
+
+        t = <FATORIAL>
+        {
+            Double fact = 1d;
+            String value = t.image;
+            value = value.substring(0, value.length() - 1);
+
+            d = Double.parseDouble(value);
+
+            for (Double c = 1d ; c <= d ; c++) {
+                fact = fact * c;
+            }
+
+            return fact;
+        }
+
+        |
+
+        <MINUS> d = Primary()
+        { return -d; }
+    )
+}
+
+double Term() throws NumberFormatException :
+{
+   Token t;
+   double i;
+   double accumulator;
+}
+{
+    i = Primary()
+    { accumulator = i; }
+    (
+        <DIVIDE>
+        i = Term()
+        { accumulator = accumulator / i; }
+
+        |
+
+        <TIMES>
+        i = Term()
+        { accumulator = accumulator * i; }
+
+        |
+
+        <EXP>
+        i = Term()
+        { accumulator = Math.pow(accumulator, i); }
+    )*
+    {
+        return accumulator;
+    }
+}
+
+double Expression() throws NumberFormatException :
+{
+   Token t;
+   double i;
+   double accumulator;
+}
+{
+    i = Term()
+    { accumulator = i; }
+    (
+        <PLUS>
+        i = Term()
+        { accumulator += i; }
+
+        |
+
+        <MINUS>
+        i = Term()
+        { accumulator -= i; }
+    )*
+    {
+        return accumulator;
+    }
+}
