@@ -40,12 +40,17 @@ public class Conversor {
 			int resto = entrada%base;
 			if (resto > 9) {
 				restos.add(retornaLetraHexa(resto));
+			}else {
+				restos.add(String.valueOf(resto));
 			}
 			entrada = entrada/base;
 		}
 		String resposta = "";
 		if(entrada > 9) {
 			resposta = retornaLetraHexa(entrada);
+		}
+		else {
+			resposta = String.valueOf(entrada);
 		}
 		for (int i = restos.size()-1; i >= 0; i--) {
 			resposta += String.valueOf(restos.get(i));

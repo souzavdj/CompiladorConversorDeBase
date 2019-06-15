@@ -1,3 +1,4 @@
+
 /*
   clear && rm -f *.java *.class && javacc calculator.jj && clear && javac *.java && cat file.gamma | java Calculator
 */
@@ -7,6 +8,7 @@ options {
 }
 
 PARSER_BEGIN(Calculator)
+
 
 public class Calculator {
 
@@ -31,21 +33,25 @@ SKIP: {
 }
 
 TOKEN: {
-  <NUMBER:   <DIGITS>
-           | <DIGITS> "." <DIGITS>
-           | <DIGITS> "."
-           | "." <DIGITS> >
+    <NUMBER: <DIGITS>
+           | <LETTERS>
+           | <DIGITS> <LETTERS>
+    >
 }
 
 TOKEN: {
     < DIGITS: (["0" - "9"])+ >
 }
 
+TOKEN : {
+    < LETTERS: (["A" - "F"])+ >
+}
+
 TOKEN: {
     < EOL: "\n" | "\r" | "\r\n"  >
 }
 
-TOKEN: {
+/*TOKEN: {
     < PLUS: "+" >
 }
 
@@ -79,22 +85,23 @@ TOKEN: {
 
 TOKEN: {
     < FATORIAL: <DIGITS> "!" >
-}
+}*/
 
 void Start() throws NumberFormatException :
 {
-    double previousValue;
+    String value;
 }
 {
     (
-        previousValue = Expression()
+        value = Conversor()
         <EOL>
-        { System.out.println(previousValue); }
+        { System.out.println(value); }
     )*
 
     <EOF>
 }
 
+/*
 double Primary() throws NumberFormatException :
 {
     Token t;
@@ -109,10 +116,12 @@ double Primary() throws NumberFormatException :
 
         |
 
-        /* <PREVIOUS>
+        */
+/* <PREVIOUS>
         { return previousValue; }
 
-        | */
+        | *//*
+
 
         <OPEN_PAR> d = Expression() <CLOSE_PAR>
         { return d; }
@@ -196,3 +205,34 @@ double Expression() throws NumberFormatException :
         return accumulator;
     }
 }
+*/
+
+String Conversor () throws NumberFormatException :
+{
+    Token t;
+    String accumulador;
+}
+{
+    t = <NUMBER>
+    {
+        int entrada = Integer.parseInt(t.image);
+        int cont = 0;
+        int base = 2;
+        java.util.List<Integer> restos = new java.util.ArrayList();
+        while(entrada >= base) {
+            restos.add(entrada%base);
+            entrada = entrada/base;
+            cont++;
+        }
+        String resposta = String.valueOf(entrada);
+        for (int i = restos.size()-1; i >= 0; i--) {
+            resposta += String.valueOf(restos.get(i));
+        }
+        accumulador = resposta;
+    }
+
+    {
+        return accumulador;
+    }
+}
+
