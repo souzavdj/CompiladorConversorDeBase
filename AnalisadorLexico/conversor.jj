@@ -29,10 +29,11 @@ SKIP: {
 }
 
 TOKEN: {
-    <NUMBER: <DIGITS>
-           | <LETTERS>
-           | <DIGITS> <LETTERS>
-           | <LETTERS> <DIGITS>
+    <NUMBER: <DIGITS>"-"<BASE>
+           //| <LETTERS>
+           //| <DIGITS> <LETTERS>
+           //| <LETTERS> <DIGITS>
+           //| <DIGITS> <BASE>
     >
 }
 
@@ -44,17 +45,30 @@ TOKEN : {
     < LETTERS: (["A" - "F"])+ >
 }
 
+TOKEN : {
+    <BASE: "B" | "b" |
+           "O" | "o" |
+           "H" | "h"
+    >
+}
+
 TOKEN: {
-    < EOL: "\n" | "\r" | "\r\n"  >
+    < EOL: "\n" | "\r" | "\r\n" >
 }
 
 void Start() :
 {
-    String valor;
+    Token t;
+    String entrada = "0";
+    String valor = "0";
 }
 {
     (
-        valor = ConversorHexa()
+        t = <NUMBER>
+        {
+            entrada = t.image;
+        }
+        valor = Conversor(entrada)
         <EOL>
         {
             System.out.println(valor);
@@ -64,41 +78,45 @@ void Start() :
     <EOF>
 }
 
-/*String [] Conversor() :
+String Conversor(String entradaTerminal) :
 {
-    String valorBinario;
-    String valorOctal;
-    String valorHexa;
-    String accumulador [] = new String[3];
+    String valor;
 }
 {
-
     {
-        valorBinario = ConversorBinario();
-        valorOctal = ConversorOctal();
-        valorHexa = ConversorHexa();
-        accumulador[0] = valorBinario;
-        accumulador[1] = valorOctal;
-        accumulador[2] = valorHexa;
+        String separaEntrada [] = entradaTerminal.split("-");
+        String entradaString = separaEntrada[0];
+        String base = separaEntrada[1];
+        if(base.equals("B") || base.equals("b")) {
+            valor = ConversorBinario(entradaString);
+        }
+        else if (base.equals("O") || base.equals("o")) {
+            valor = ConversorOctal(entradaString);
+        }
+        else if (base.equals("H") || base.equals("h")) {
+            valor = ConversorHexa(entradaString);
+        }
+        else {
+            valor = "0";
+        }
     }
     {
-        return accumulador;
+        return valor;
     }
 
-}*/
+}
 
-String ConversorBinario () :
+
+String ConversorBinario (String entradaString) :
 {
-    Token t;
     String accumulador;
 }
 {
-    t = <NUMBER>
     {
-        int entrada = Integer.parseInt(t.image);
+        int entrada = Integer.parseInt(entradaString);
         int cont = 0;
         int base = 2;
-        java.util.List<Integer> restos = new java.util.ArrayList();
+        java.util.List<Integer> restos = new java.util.ArrayList<Integer>();
         while(entrada >= base) {
             restos.add(entrada%base);
             entrada = entrada/base;
@@ -116,18 +134,16 @@ String ConversorBinario () :
     }
 }
 
-String ConversorOctal () :
+String ConversorOctal (String entradaString) :
 {
-    Token t;
     String accumulador;
 }
 {
-    t = <NUMBER>
     {
-        int entrada = Integer.parseInt(t.image);
+        int entrada = Integer.parseInt(entradaString);
         int cont = 0;
         int base = 8;
-        java.util.List<Integer> restos = new java.util.ArrayList();
+        java.util.List<Integer> restos = new java.util.ArrayList<Integer>();
         while(entrada >= base) {
             restos.add(entrada%base);
             entrada = entrada/base;
@@ -145,15 +161,13 @@ String ConversorOctal () :
     }
 }
 
-String ConversorHexa () :
+String ConversorHexa (String entradaString) :
 {
-    Token t;
     String accumulador;
 }
 {
-    t = <NUMBER>
     {
-        int entrada = Integer.parseInt(t.image);
+        int entrada = Integer.parseInt(entradaString);
         int base = 16;
         java.util.List<String> restos = new java.util.ArrayList<String>();
         while(entrada >= base) {

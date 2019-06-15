@@ -9,7 +9,9 @@ public class Conversor implements ConversorConstants {
     }
 
   final public void Start() throws ParseException {
-    String valor;
+    Token t;
+    String entrada = "0";
+    String valor = "0";
     label_1:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -20,43 +22,42 @@ public class Conversor implements ConversorConstants {
         jj_la1[0] = jj_gen;
         break label_1;
       }
-      valor = ConversorHexa();
+      t = jj_consume_token(NUMBER);
+            entrada = t.image;
+      valor = Conversor(entrada);
       jj_consume_token(EOL);
             System.out.println(valor);
     }
     jj_consume_token(0);
   }
 
-/*String [] Conversor() :
-{
-    String valorBinario;
-    String valorOctal;
-    String valorHexa;
-    String accumulador [] = new String[3];
-}
-{
+  final public String Conversor(String entradaTerminal) throws ParseException {
+    String valor;
+        String separaEntrada [] = entradaTerminal.split("-");
+        String entradaString = separaEntrada[0];
+        String base = separaEntrada[1];
+        if(base.equals("B") || base.equals("b")) {
+            valor = ConversorBinario(entradaString);
+        }
+        else if (base.equals("O") || base.equals("o")) {
+            valor = ConversorOctal(entradaString);
+        }
+        else if (base.equals("H") || base.equals("h")) {
+            valor = ConversorHexa(entradaString);
+        }
+        else {
+            valor = "0";
+        }
+        {if (true) return valor;}
+    throw new Error("Missing return statement in function");
+  }
 
-    {
-        valorBinario = ConversorBinario();
-        valorOctal = ConversorOctal();
-        valorHexa = ConversorHexa();
-        accumulador[0] = valorBinario;
-        accumulador[1] = valorOctal;
-        accumulador[2] = valorHexa;
-    }
-    {
-        return accumulador;
-    }
-
-}*/
-  final public String ConversorBinario() throws ParseException {
-    Token t;
+  final public String ConversorBinario(String entradaString) throws ParseException {
     String accumulador;
-    t = jj_consume_token(NUMBER);
-        int entrada = Integer.parseInt(t.image);
+        int entrada = Integer.parseInt(entradaString);
         int cont = 0;
         int base = 2;
-        java.util.List<Integer> restos = new java.util.ArrayList();
+        java.util.List<Integer> restos = new java.util.ArrayList<Integer>();
         while(entrada >= base) {
             restos.add(entrada%base);
             entrada = entrada/base;
@@ -71,14 +72,12 @@ public class Conversor implements ConversorConstants {
     throw new Error("Missing return statement in function");
   }
 
-  final public String ConversorOctal() throws ParseException {
-    Token t;
+  final public String ConversorOctal(String entradaString) throws ParseException {
     String accumulador;
-    t = jj_consume_token(NUMBER);
-        int entrada = Integer.parseInt(t.image);
+        int entrada = Integer.parseInt(entradaString);
         int cont = 0;
         int base = 8;
-        java.util.List<Integer> restos = new java.util.ArrayList();
+        java.util.List<Integer> restos = new java.util.ArrayList<Integer>();
         while(entrada >= base) {
             restos.add(entrada%base);
             entrada = entrada/base;
@@ -93,11 +92,9 @@ public class Conversor implements ConversorConstants {
     throw new Error("Missing return statement in function");
   }
 
-  final public String ConversorHexa() throws ParseException {
-    Token t;
+  final public String ConversorHexa(String entradaString) throws ParseException {
     String accumulador;
-    t = jj_consume_token(NUMBER);
-        int entrada = Integer.parseInt(t.image);
+        int entrada = Integer.parseInt(entradaString);
         int base = 16;
         java.util.List<String> restos = new java.util.ArrayList<String>();
         while(entrada >= base) {
@@ -272,7 +269,7 @@ public class Conversor implements ConversorConstants {
   /** Generate ParseException. */
   public ParseException generateParseException() {
     jj_expentries.clear();
-    boolean[] la1tokens = new boolean[11];
+    boolean[] la1tokens = new boolean[12];
     if (jj_kind >= 0) {
       la1tokens[jj_kind] = true;
       jj_kind = -1;
@@ -286,7 +283,7 @@ public class Conversor implements ConversorConstants {
         }
       }
     }
-    for (int i = 0; i < 11; i++) {
+    for (int i = 0; i < 12; i++) {
       if (la1tokens[i]) {
         jj_expentry = new int[1];
         jj_expentry[0] = i;
