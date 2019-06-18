@@ -11,13 +11,15 @@ public interface ConversorConstants {
   /** RegularExpression Id. */
   int NUMBER = 7;
   /** RegularExpression Id. */
-  int DIGITS = 8;
+  int TRACO = 8;
   /** RegularExpression Id. */
-  int LETTERS = 9;
+  int DIGITS = 9;
   /** RegularExpression Id. */
-  int BASE = 10;
+  int LETTERS = 10;
   /** RegularExpression Id. */
-  int EOL = 11;
+  int BASE = 11;
+  /** RegularExpression Id. */
+  int EOL = 12;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -34,6 +36,7 @@ public interface ConversorConstants {
     "\"*/\"",
     "<token of kind 6>",
     "<NUMBER>",
+    "\"-\"",
     "<DIGITS>",
     "<LETTERS>",
     "<BASE>",

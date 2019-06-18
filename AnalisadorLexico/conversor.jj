@@ -29,16 +29,18 @@ SKIP: {
 }
 
 TOKEN: {
-    <NUMBER: <DIGITS>"-"<BASE>
-           //| <LETTERS>
-           //| <DIGITS> <LETTERS>
-           //| <LETTERS> <DIGITS>
-           //| <DIGITS> <BASE>
+    <NUMBER: <DIGITS><TRACO><BASE>
     >
 }
 
+TOKEN : {
+    <TRACO: "-">
+}
+
+
 TOKEN: {
-    < DIGITS: (["0" - "9"])+ >
+    < DIGITS: (["0" - "9"])+
+    | <LETTERS> >
 }
 
 TOKEN : {
