@@ -39,18 +39,29 @@ TOKEN : {
 
 
 TOKEN: {
-    < DIGITS: (["0" - "9"])+
-    | <LETTERS> >
+    < DIGITS: (["0" - "9"])  |
+              <RESTO> (["0" - "9"])+  |
+              <RESTO> <LETTERS>
+    >
 }
 
 TOKEN : {
-    < LETTERS: (["A" - "F"])+ >
+    < LETTERS: (["A" - "F"])
+                <RESTO> (["0" - "9"])+  |
+                <RESTO> (["A" - "F"])+
+    >
 }
 
 TOKEN : {
     <BASE: "B" | "b" |
            "O" | "o" |
            "H" | "h"
+    >
+}
+
+TOKEN : {
+    <RESTO: (["0" - "9"]) |
+            (["A" - "F"])
     >
 }
 

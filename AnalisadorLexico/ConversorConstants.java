@@ -19,7 +19,9 @@ public interface ConversorConstants {
   /** RegularExpression Id. */
   int BASE = 11;
   /** RegularExpression Id. */
-  int EOL = 12;
+  int RESTO = 12;
+  /** RegularExpression Id. */
+  int EOL = 13;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -40,6 +42,7 @@ public interface ConversorConstants {
     "<DIGITS>",
     "<LETTERS>",
     "<BASE>",
+    "<RESTO>",
     "<EOL>",
   };
 
